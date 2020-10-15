@@ -16,6 +16,9 @@ require 'pry'
 class Game
   attr_reader :dictionary
 
+  DICTIONARY_REGEX = /\r\n([a-zA-Z]{5,12})\r\n/.freeze
+  DICTIONARY_FILE = 'dictionary.txt'.freeze
+
   def initialize
     @remaining_guess_counter = 6
     create_dictionary
@@ -24,10 +27,10 @@ class Game
   end
 
   def create_dictionary
-    @dictionary = File.read('dictionary.txt').scan(/\r\n([a-zA-Z]{5,12})\r\n/).flatten
+    @dictionary = File.read(Game::DICTIONARY_FILE).scan(Game::DICTIONARY_REGEX).flatten
   end
 
-  def get_random_secret_word
+  def get_random_secret_word # add sample to File.read dictionary method to condense
     @secret_word = dictionary.sample
   end
 end
