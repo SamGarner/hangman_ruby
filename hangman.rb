@@ -35,6 +35,11 @@ class Game
     @secret_word = dictionary.sample
   end
 
+  def get_player_guess
+    puts 'Guess a letter that has not been chosen yet:'
+    @guess = gets.chomp.downcase
+  end
+
   private
 
   attr_reader :secret_word
@@ -46,9 +51,10 @@ class Board
 
   def initialize(secret_word)
     # @length = secret_word.length
-    @game_board = Array.new(2) { Array.new(secret_word.length) }
+    @gameboard = Array.new(2) { Array.new(secret_word.length) }
     secret_word_letters(secret_word)
     add_secret_word_to_board
+    self.gameboard[1].map! { '_' } # set guess/display row to show 'blank spaces'
   end
 
   def secret_word_letters(secret_word)
@@ -58,17 +64,24 @@ class Board
   def add_secret_word_to_board
     # below version does not work if a letter repeats in the word. less straightforward as well
     # letters.each do |letter|
-    #   game_board[0][letters.index(letter)] = letter
+    #   gameboard[0][letters.index(letter)] = letter
     # end
     (0..letters.length - 1).each do |index|
-      game_board[0][index] = letters[index]
+      gameboard[0][index] = letters[index]
     end
   end
+
+  def check_guess(letter)
+  end
+
+  # comparing input against secret word - count to get the number of occurences then loop using .index/each_index to replace?
+  # e.g. arr = ['x', 'o', 'x', '.', '.', 'o', 'x']
+    #  p arr.each_index.select{|i| arr[i] == 'x'} # =>[0, 2, 6]
 
   private
 
   attr_reader :letters
-  attr_accessor :game_board
+  attr_accessor :gameboard
 end
 
 current_game = Game.new
