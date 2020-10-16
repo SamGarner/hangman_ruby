@@ -3,14 +3,14 @@
 require 'pry'
 
 class Game
-  attr_reader :dictionary, :guess
+  attr_reader :guess #, :dictionary
 
   DICTIONARY_REGEX = /\r\n([a-zA-Z]{5,12})\r\n/.freeze # only 5-12 character words
   DICTIONARY_FILE = 'dictionary.txt'.freeze
 
   def initialize
     @remaining_guess_counter = 6
-    create_dictionary
+    # create_dictionary
     get_random_secret_word
     @board = Board.new(secret_word)
   end
@@ -19,7 +19,7 @@ class Game
     while @remaining_guess_counter > 0
       puts @board.gameboard[0].join #troubleshooting only
       puts "#{remaining_guess_counter} incorrect guesses remaining."
-      puts "incorrect guesses: #{@board.incorrect_guesses.join('-')}"
+      puts "incorrect guesses: #{@board.incorrect_guesses.uniq.join('-')}"
       get_player_guess
       if guess == '-'
         puts 'Invalid input. Please choose a valid letter.'
@@ -35,18 +35,21 @@ class Game
     end
   end
 
-  def create_dictionary
-    @dictionary = File.read(Game::DICTIONARY_FILE).scan(Game::DICTIONARY_REGEX).flatten
+  # def create_dictionary
+    # @dictionary = File.read(Game::DICTIONARY_FILE).scan(Game::DICTIONARY_REGEX).flatten
+  def get_random_secret_word
+    @secret_word = File.read(Game::DICTIONARY_FILE).scan(Game::DICTIONARY_REGEX).flatten.sample
   end
 
-  def get_random_secret_word # add sample to File.read dictionary method to condense?
-    @secret_word = dictionary.sample
-  end
+  # def get_random_secret_word # add sample to File.read dictionary method to condense?
+  #   @secret_word = dictionary.sample
+  # end
 
   def get_player_guess
     puts 'Guess a letter that has not been chosen yet:'
     @input = gets.chomp.downcase
     @guess = input.match(/[a-z]/) && input.length == 1 ? input : '-'
+    #binding.pry
   end
 
   def show_board_status
@@ -99,13 +102,13 @@ class Board
   end
 
   def check_guess(letter)
-    @indices = gameboard[0].each_index.select { |i| gameboard[0][i] == letter }
+    @indices = gameboard[0].each_index.select { |i| gameboard[0][i].downcase == letter }
       if @indices.empty?
         incorrect_guesses << letter
         puts 'Sorry, the secret word does not contain that letter'
       else 
         @indices.each do |index|
-          gameboard[1][index] = letter
+          gameboard[1][index] = gameboard[0][index] # letter
         end
         puts 'Good guess!'
       end
@@ -127,3 +130,4 @@ current_game.play
     #   @secret_word = dictionary.sample
     # end
   # private vs non-private attr_ getter/setter methods
+# when better to use getter/setters vs having the @/instance variable itself for clarity?
