@@ -9,12 +9,6 @@ class Game
   DICTIONARY_REGEX = /\r\n([a-zA-Z]{5,12})\r\n/.freeze # only 5-12 character words
   DICTIONARY_FILE = 'dictionary.txt'.freeze
 
-  def initialize
-    @remaining_guess_counter = 6
-    get_random_secret_word
-    @board = Board.new(secret_word)
-  end
-
   def initialize(game_type)
     if game_type == 'n'
       @remaining_guess_counter = 6
@@ -160,36 +154,16 @@ class Board
   attr_accessor :gameboard, :incorrect_guesses
 end
 
- # current_game = Game.new
- # current_game.from_json(File.open('hangman.txt', 'r'))
- # binding.pry
-# current_game.play
 
 puts 'Welcome to Hangman!'
 game_type = ''
-while !%w[n s].include?(game_type)
+until %w[n s].include?(game_type)
   puts 'Enter n for a new game or s to load a saved game:'
   game_type = gets.chomp.downcase
 end
 current_game = Game.new(game_type)
 current_game.play
-# # binding.pry
-# #add protection against entering something other than n or s
-# while %w[n s].include?(game_type)
-#   if game_type == 'n'
-#     current_game = Game.new
-#     current_game.play
-#     break
-#   elsif game_type == 's'
-#     loaded_game = Game.from_json(File.open('hangman.txt', 'r'))
-#     binding.pry
-#     loaded_game.play
-#     binding.pry
-#     break
-#   else 'invalid input, please type s for a saved game or n for a new game'
-#   end
-#   binding.pry
-# end
+
 
 # lezioni
 # PRY!!!
