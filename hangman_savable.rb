@@ -31,7 +31,7 @@ class Game
 
   def play
     while @remaining_guess_counter > 0
-      puts @board.gameboard[0].join #troubleshooting only
+      puts @board.gameboard[0].join # troubleshooting only
       puts "#{remaining_guess_counter} incorrect guesses remaining."
       puts "incorrect guesses: #{@board.incorrect_guesses.uniq.join('-')}"
       get_player_guess
@@ -90,19 +90,19 @@ class Game
     end
   end
 
-  def to_json # change to newer syntax
-    p JSON.dump ({
-      :remaining_guess_counter => @remaining_guess_counter,
+  def to_json
+    JSON.dump ({
+      remaining_guess_counter: @remaining_guess_counter,
       #:board => @board,
-      :gameboard => @board.gameboard,
-      :incorrect_guesses => @board.incorrect_guesses
+      gameboard: @board.gameboard,
+      incorrect_guesses: @board.incorrect_guesses
     })
   end
 
   def from_json(string)
-    data = JSON.load(string)
+    data = JSON.load(string) # need to use load rather than parse since File.open
     # load_game(data['remaining_guess_counter'], data['board'])
-    self.load_game(data['remaining_guess_counter'], data['gameboard'], data['incorrect_guesses'])
+    load_game(data['remaining_guess_counter'], data['gameboard'], data['incorrect_guesses'])
   end
 
   private
