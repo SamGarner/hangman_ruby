@@ -3,8 +3,9 @@
 require 'pry'
 require 'json'
 
+# Game comment
 class Game
-  attr_reader :guess #, :dictionary
+  attr_reader :guess # , :dictionary
 
   DICTIONARY_REGEX = /\r\n([a-zA-Z]{5,12})\r\n/.freeze # only 5-12 character words
   DICTIONARY_FILE = 'dictionary.txt'.freeze
@@ -44,12 +45,11 @@ class Game
       else
         @board.check_guess(guess)
       end
-      self.remaining_guess_counter = 6 - @board.incorrect_guesses.uniq.length 
-        # THE IMPORTANCE OF SELF HERE SO PROGRAM DOESN'T THINK MAKING A QUICK LOCAL VARIABLE
-      remaining_guess_counter == 4 ? to_json : nil
-      remaining_guess_counter == 4 ? (File.open('hangman.txt', 'w') { |file| file.puts to_json }) : nil
+      self.remaining_guess_counter = 6 - @board.incorrect_guesses.uniq.length
+      # THE IMPORTANCE OF SELF HERE SO PROGRAM DOESN'T THINK MAKING A QUICK LOCAL VARIABLE
+      # Next line is for troubleshooting save functionality only
+      # remaining_guess_counter == 4 ? (File.open('hangman.txt', 'w') { |file| file.puts to_json }) : nil
       show_board_status
-      # game_won? ? (puts "Congrats, you've guessed the word!") : nil
       exit if game_won? || game_lost?
     end
   end
@@ -68,7 +68,6 @@ class Game
     puts "Guess a letter that has not been chosen yet or type 'save' to save game"
     @input = gets.chomp.downcase
     @guess = (input.match(/[a-z]/) && input.length == 1) || input == 'save' ? input : '-'
-    #binding.pry
   end
 
   def show_board_status
