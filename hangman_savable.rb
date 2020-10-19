@@ -114,6 +114,7 @@ end
 # Board comment
 class Board
   # call @board to see all the variables or use attr_reader to call var directly
+  attr_reader :incorrect_guesses, :gameboard # cannot be private
 
   def initialize(secret_word)
     @gameboard = Array.new(2) { Array.new(secret_word.length) }
@@ -147,10 +148,9 @@ class Board
       end
   end
 
-  #private
+  private
 
-  attr_reader :letters, :indices
-  attr_accessor :gameboard, :incorrect_guesses
+  attr_reader :letters#, :indices
 end
 
 puts 'Welcome to Hangman!'
