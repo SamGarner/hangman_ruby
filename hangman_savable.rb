@@ -7,28 +7,6 @@ require 'json'
 class Game
   # attr_reader :guess # , :dictionary
 
-  DICTIONARY_REGEX = /\r\n([a-zA-Z]{5,12})\r\n/.freeze # only 5-12 character words
-  DICTIONARY_FILE = 'dictionary.txt'.freeze
-
-  def initialize(game_type)
-    if game_type == 'n'
-      @remaining_guess_counter = 6
-      get_random_secret_word
-      @board = Board.new(secret_word)
-    elsif game_type == 's'
-      from_json(File.open('hangman.txt', 'r'))
-    end
-  end
-
-  def load_game(remaining_guess_counter, gameboard, incorrect_guesses)
-    @remaining_guess_counter = remaining_guess_counter
-    # get_random_secret_word
-    @board = Board.new('') # Board.new(secret_word)
-    @board.gameboard = gameboard
-    @board.incorrect_guesses = incorrect_guesses
-    show_board_status
-  end
-
   def play
     while @remaining_guess_counter > 0
       puts @board.gameboard[0].join # troubleshooting only
@@ -52,6 +30,30 @@ class Game
       show_board_status
       exit if game_won? || game_lost?
     end
+  end
+
+  private
+
+  DICTIONARY_REGEX = /\r\n([a-zA-Z]{5,12})\r\n/.freeze # only 5-12 character words
+  DICTIONARY_FILE = 'dictionary.txt'.freeze
+
+  def initialize(game_type)
+    if game_type == 'n'
+      @remaining_guess_counter = 6
+      get_random_secret_word
+      @board = Board.new(secret_word)
+    elsif game_type == 's'
+      from_json(File.open('hangman.txt', 'r'))
+    end
+  end
+
+  def load_game(remaining_guess_counter, gameboard, incorrect_guesses)
+    @remaining_guess_counter = remaining_guess_counter
+    # get_random_secret_word
+    @board = Board.new('') # Board.new(secret_word)
+    @board.gameboard = gameboard
+    @board.incorrect_guesses = incorrect_guesses
+    show_board_status
   end
 
   # def create_dictionary
@@ -105,8 +107,6 @@ class Game
     load_game(data['remaining_guess_counter'], data['gameboard'], data['incorrect_guesses'])
   end
 
-  private
-
   attr_reader :secret_word, :input, :guess
   attr_accessor :remaining_guess_counter
 end
@@ -114,10 +114,25 @@ end
 # Board comment
 class Board
   # call @board to see all the variables or use attr_reader to call var directly
-  
+
   attr_accessor :gameboard, :incorrect_guesses 
   # need accessor rather than reader when loading a saved game, cannot be private
 
+  def check_guess(letter)
+    @indices = gameboard[0].each_index.select { |i| gameboard[0][i].downcase == letter }
+      if @indices.empty?
+        incorrect_guesses << letter
+        puts 'Sorry, the secret word does not contain that letter'
+      else 
+        @indices.each do |index|
+          gameboard[1][index] = gameboard[0][index] # letter
+        end
+        puts 'Good guess!'
+      end
+  end
+
+  private
+ 
   def initialize(secret_word)
     @gameboard = Array.new(2) { Array.new(secret_word.length) }
     secret_word_letters(secret_word)
@@ -136,21 +151,6 @@ class Board
       gameboard[0][index] = letters[index]
     end
   end
-
-  def check_guess(letter)
-    @indices = gameboard[0].each_index.select { |i| gameboard[0][i].downcase == letter }
-      if @indices.empty?
-        incorrect_guesses << letter
-        puts 'Sorry, the secret word does not contain that letter'
-      else 
-        @indices.each do |index|
-          gameboard[1][index] = gameboard[0][index] # letter
-        end
-        puts 'Good guess!'
-      end
-  end
-
-  private
 
   attr_reader :letters#, :indices
 end
