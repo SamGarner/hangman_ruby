@@ -47,7 +47,7 @@ class Game
       end
       self.remaining_guess_counter = 6 - @board.incorrect_guesses.uniq.length
       # THE IMPORTANCE OF SELF HERE SO PROGRAM DOESN'T THINK MAKING A QUICK LOCAL VARIABLE
-      # Next line is for troubleshooting save functionality only
+      # Next commented out line is for troubleshooting save functionality only
       # remaining_guess_counter == 4 ? (File.open('hangman.txt', 'w') { |file| file.puts to_json }) : nil
       show_board_status
       exit if game_won? || game_lost?
@@ -153,7 +153,6 @@ class Board
   attr_accessor :gameboard, :incorrect_guesses
 end
 
-
 puts 'Welcome to Hangman!'
 game_type = ''
 until %w[n s].include?(game_type)
@@ -172,3 +171,8 @@ current_game.play
     # end
   # private vs non-private attr_ getter/setter methods
 # when better to use getter/setters vs having the @/instance variable itself for clarity?
+
+# using freeze to freeze constants
+# scope clicking - recreating @board.gameboard within Game.
+# JSON.dump( hash of variables to save)
+# JSON.load(string) # need to use load rather than parse since File.open
