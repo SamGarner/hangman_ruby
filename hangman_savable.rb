@@ -5,7 +5,6 @@ require 'json'
 
 # Game comment
 class Game
-  # attr_reader :guess # , :dictionary
 
   def play
     while @remaining_guess_counter > 0
@@ -56,8 +55,9 @@ class Game
     show_board_status
   end
 
-  # def create_dictionary
-    # @dictionary = File.read(Game::DICTIONARY_FILE).scan(Game::DICTIONARY_REGEX).flatten
+# def create_dictionary
+  # @dictionary = File.read(Game::DICTIONARY_FILE).scan(Game::DICTIONARY_REGEX).flatten
+
   def get_random_secret_word
     @secret_word = File.read(Game::DICTIONARY_FILE).scan(Game::DICTIONARY_REGEX).flatten.sample
   end
@@ -115,24 +115,24 @@ end
 class Board
   # call @board to see all the variables or use attr_reader to call var directly
 
-  attr_accessor :gameboard, :incorrect_guesses 
+  attr_accessor :gameboard, :incorrect_guesses
   # need accessor rather than reader when loading a saved game, cannot be private
 
   def check_guess(letter)
     @indices = gameboard[0].each_index.select { |i| gameboard[0][i].downcase == letter }
-      if @indices.empty?
-        incorrect_guesses << letter
-        puts 'Sorry, the secret word does not contain that letter'
-      else 
-        @indices.each do |index|
-          gameboard[1][index] = gameboard[0][index] # letter
-        end
-        puts 'Good guess!'
+    if @indices.empty?
+      incorrect_guesses << letter
+      puts 'Sorry, the secret word does not contain that letter'
+    else
+      @indices.each do |index|
+        gameboard[1][index] = gameboard[0][index] # letter
       end
+      puts 'Good guess!'
+    end
   end
 
   private
- 
+
   def initialize(secret_word)
     @gameboard = Array.new(2) { Array.new(secret_word.length) }
     secret_word_letters(secret_word)
@@ -152,7 +152,7 @@ class Board
     end
   end
 
-  attr_reader :letters#, :indices
+  attr_reader :letters
 end
 
 puts 'Welcome to Hangman!'
@@ -166,12 +166,6 @@ current_game.play
 
 
 # lezioni
-# PRY!!!
-# dont have to use @dictionary here if using attr_reader etc, because now calling the method:
-    # def get_random_secret_word
-    #   @secret_word = dictionary.sample
-    # end
-  # private vs non-private attr_ getter/setter methods
 # when better to use getter/setters vs having the @/instance variable itself for clarity?
 
 # using freeze to freeze constants
