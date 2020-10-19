@@ -5,7 +5,7 @@ require 'json'
 
 # Game comment
 class Game
-  attr_reader :guess # , :dictionary
+  # attr_reader :guess # , :dictionary
 
   DICTIONARY_REGEX = /\r\n([a-zA-Z]{5,12})\r\n/.freeze # only 5-12 character words
   DICTIONARY_FILE = 'dictionary.txt'.freeze
@@ -107,7 +107,7 @@ class Game
 
   private
 
-  attr_reader :secret_word, :input
+  attr_reader :secret_word, :input, :guess
   attr_accessor :remaining_guess_counter
 end
 
