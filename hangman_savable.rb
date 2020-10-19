@@ -114,7 +114,9 @@ end
 # Board comment
 class Board
   # call @board to see all the variables or use attr_reader to call var directly
-  attr_reader :incorrect_guesses, :gameboard # cannot be private
+  
+  attr_accessor :gameboard, :incorrect_guesses 
+  # need accessor rather than reader when loading a saved game, cannot be private
 
   def initialize(secret_word)
     @gameboard = Array.new(2) { Array.new(secret_word.length) }
