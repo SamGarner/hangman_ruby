@@ -42,7 +42,7 @@ class Game
       get_random_secret_word
       @board = Board.new(secret_word)
     elsif game_type == 's'
-      from_json(File.open('hangman.txt', 'r'))
+      from_json(File.open('hangman.txt', 'r')) # add error handling here?
     end
   end
 
@@ -93,12 +93,12 @@ class Game
   end
 
   def to_json
-    JSON.dump ({
-      remaining_guess_counter: @remaining_guess_counter,
-      #:board => @board,
-      gameboard: @board.gameboard,
-      incorrect_guesses: @board.incorrect_guesses
-    })
+    JSON.dump({
+                remaining_guess_counter: @remaining_guess_counter,
+                #:board => @board,
+                gameboard: @board.gameboard,
+                incorrect_guesses: @board.incorrect_guesses
+              })
   end
 
   def from_json(string)
@@ -143,7 +143,7 @@ class Board
   end
 
   def secret_word_letters(secret_word)
-    @letters = secret_word.split('')
+    @letters = secret_word.split('') # use String#chars instead
   end
 
   def add_secret_word_to_board
